@@ -14,6 +14,8 @@ class TicTacToeGUI:
     BLUE = (0, 0, 255)
     GREEN = (0, 255, 0)
     BG_COLOR = (245, 245, 245)
+    DARK_BLUE = (25, 25, 112)  # Added dark blue for message box
+    LIGHT_YELLOW = (255, 255, 204)  # Added light yellow for message box
     
     # Dimensions
     WIDTH = 600
@@ -153,34 +155,50 @@ class TicTacToeGUI:
         if self.game.is_terminal_state(self.state):
             self.game_over = True
             self.winner = self.game.get_winner(self.state)
-            self.display_result()
-    
+        
     def display_result(self):
         """Display the game result"""
-        font = pygame.font.Font(None, 40)
+        # Create a more visible background for the message box
+        box_width = self.WIDTH - 100
+        box_height = 150
+        box_x = 50
+        box_y = self.HEIGHT // 2 - 75
         
+        # Draw outer box with border
+        pygame.draw.rect(self.screen, self.DARK_BLUE, 
+                        (box_x-5, box_y-5, box_width+10, box_height+10), 0, 15)
+        
+        # Draw inner box
+        pygame.draw.rect(self.screen, self.LIGHT_YELLOW, 
+                        (box_x, box_y, box_width, box_height), 0, 10)
+        
+        # Prepare text with bold font
+        title_font = pygame.font.SysFont(None, 60, bold=True)
+        
+        # Display result
         if self.winner == self.player_symbol:
-            text = font.render("You Won!", True, self.GREEN)
+            result_text = "You Won!"
+            text_color = self.GREEN
         elif self.winner == self.ai_symbol:
-            text = font.render("AI Won!", True, self.RED)
+            result_text = "AI Won!"
+            text_color = self.RED
         else:
-            text = font.render("It's a Draw!", True, self.BLACK)
+            result_text = "It's a Draw!"
+            text_color = self.BLACK
         
-        # Create a semi-transparent background for the text
-        overlay = pygame.Surface((self.WIDTH, 80))
-        overlay.set_alpha(180)
-        overlay.fill(self.WHITE)
-        self.screen.blit(overlay, (0, self.HEIGHT // 2 - 40))
-        
-        # Display the text
-        text_rect = text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2))
+        # Only render the main text, no shadow
+        text = title_font.render(result_text, True, text_color)
+        text_rect = text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 - 20))
         self.screen.blit(text, text_rect)
         
-        # Display restart instructions
-        restart_font = pygame.font.Font(None, 30)
-        restart_text = restart_font.render("Press R to restart or Q to quit", True, self.BLACK)
+        # Display restart instructions with improved visibility
+        restart_font = pygame.font.SysFont(None, 36)
+        restart_text = restart_font.render("Press R to restart or Q to quit", True, self.DARK_BLUE)
         restart_rect = restart_text.get_rect(center=(self.WIDTH // 2, self.HEIGHT // 2 + 30))
         self.screen.blit(restart_text, restart_rect)
+        
+        # Update display immediately to show the message box
+        pygame.display.update()
     
     def restart_game(self, player_first=None):
         """Restart the game"""
@@ -206,33 +224,34 @@ class TicTacToeGUI:
             self.ai_make_move()
     
     def run(self):
-        """Main game loop"""
         while True:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
                     pygame.quit()
                     sys.exit()
-                
                 if event.type == pygame.MOUSEBUTTONDOWN and not self.game_over and self.current_player == self.player_symbol:
                     mouseX, mouseY = event.pos
                     clicked_row = mouseY // self.SQUARE_SIZE
                     clicked_col = mouseX // self.SQUARE_SIZE
-                    
                     if 0 <= clicked_row < self.BOARD_ROWS and 0 <= clicked_col < self.BOARD_COLS:
                         self.handle_click(clicked_row, clicked_col)
-                
                 if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_r:  # Restart game
+                    if event.key == pygame.K_r:
                         self.restart_game()
-                    elif event.key == pygame.K_1:  # Play as X (first)
+                    elif event.key == pygame.K_1:
                         self.restart_game(True)
-                    elif event.key == pygame.K_2:  # Play as O (second)
+                    elif event.key == pygame.K_2:
                         self.restart_game(False)
-                    elif event.key == pygame.K_q:  # Quit game
+                    elif event.key == pygame.K_q:
                         pygame.quit()
                         sys.exit()
-            
-            # Update display
+            # Always redraw board and pieces
+            self.screen.fill(self.BG_COLOR)
+            self.draw_lines()
+            self.draw_figures()
+            # Draw result box last if game is over
+            if self.game_over:
+                self.display_result()
             pygame.display.update()
 
 
