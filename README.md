@@ -5,6 +5,7 @@ This project implements an AI agent for Tic-Tac-Toe using the Minimax algorithm 
 ## Features
 
 - Command-line interface to play Tic-Tac-Toe against the AI
+- Graphical user interface using Pygame
 - Implementation of Minimax algorithm with Alpha-Beta pruning for efficient decision making
 - Adjustable AI difficulty through search depth parameter
 - Option to play as first or second player
@@ -14,6 +15,7 @@ This project implements an AI agent for Tic-Tac-Toe using the Minimax algorithm 
 
 - Python 3.6+
 - NumPy library
+- Pygame library (for GUI version)
 
 ## Installation
 
@@ -30,14 +32,15 @@ pip install -r requirements.txt
 
 ## How to Play
 
+### Command Line Version
+
 Run the game using the following command:
 
 ```bash
 python main.py
 ```
 
-### Command Line Options
-
+Command Line Options:
 - `--depth`: Set the maximum search depth for the AI (default: 5)
   ```bash
   python main.py --depth 3  # Easier AI
@@ -49,12 +52,39 @@ python main.py
   python main.py --second
   ```
 
+### GUI Version
+
+Run the graphical interface using:
+
+```bash
+python gui.py
+```
+
+GUI Controls:
+- Click on a cell to make a move
+- Press 'R' to restart the game
+- Press '1' to play as X (first player)
+- Press '2' to play as O (second player)
+- Press 'Q' to quit the game
+
+GUI Command Line Options:
+- `--depth`: Set the maximum search depth for the AI (default: 5)
+  ```bash
+  python gui.py --depth 3  # Easier AI
+  ```
+
+- `--second`: Let the AI play first, you play second
+  ```bash
+  python gui.py --second
+  ```
+
 ### Gameplay Instructions
 
 1. The game board is displayed with row and column indices.
-2. Enter your move in the format `row,col` (e.g., `1,2`).
-3. The AI will respond with its move.
-4. The game continues until someone wins or it's a draw.
+2. For CLI: Enter your move in the format `row,col` (e.g., `1,2`).
+3. For GUI: Click on the cell where you want to place your mark.
+4. The AI will respond with its move.
+5. The game continues until someone wins or it's a draw.
 
 ## Project Structure
 
@@ -62,6 +92,7 @@ python main.py
 - `minimax_agent.py`: Implementation of the Minimax algorithm with Alpha-Beta pruning
 - `tictactoe.py`: Tic-Tac-Toe game implementation
 - `main.py`: Command-line interface to play the game
+- `gui.py`: Graphical user interface using Pygame
 - `requirements.txt`: List of Python dependencies
 
 ## How It Works
@@ -87,6 +118,7 @@ The architecture is designed to be extensible. You can:
 1. Create new game implementations by extending the `Game` class
 2. Modify the evaluation function in the `TicTacToe` class to change AI behavior
 3. Experiment with different search algorithms in place of Minimax
+4. Enhance the GUI with additional features or visual effects
 
 ## License
 
